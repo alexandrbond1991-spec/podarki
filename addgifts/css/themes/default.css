@@ -1,0 +1,7 @@
+.badge.gift.shop_addgifts__badge span {
+  left: -5px !important;
+  right: -5px !important;
+}
+.badge.gift.shop_addgifts__badge--default span {
+  color: inherit !important;
+}

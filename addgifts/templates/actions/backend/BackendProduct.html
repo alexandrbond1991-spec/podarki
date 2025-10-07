@@ -1,0 +1,24 @@
+{strip}
+    <h6 class="heading" style="margin-bottom: 6px;"><a href="?action=products#/addgifts/">Подарки</a></h6>
+    {if empty($rules)}
+        <p class="gray">Отсутсвуют</p>
+    {else}
+
+        <p class="gray small">На товар распространяются следующие правила с подарками:</p>
+
+        <ul class="menu-v compact">
+        {foreach $rules as $rule}
+
+            <li>
+                <b>ID: {$rule.id}, {$rule.name|default:'без названия'}</b>
+
+                <ul class="menu-v compact">
+                {foreach $rule.gifts as $gift_index => $gift}
+                    <li><a href="?action=products#/product/{$gift.product.id|escape}/edit/"><i class="icon16 b-addgifts__sidebar_icon"></i> {$gift.product.name|escape}</a></li>
+                {/foreach}
+                </ul>
+            </li>
+        {/foreach}
+
+    {/if}
+{/strip}

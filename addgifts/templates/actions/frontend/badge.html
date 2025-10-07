@@ -1,0 +1,12 @@
+{strip}
+    {$default_badge|default:''}
+    <div class="badge gift shop_addgifts__badge--{$current_theme}">
+        <span>
+            {if $count_gifts>1}
+                {eval var=$settings.badge_text_many}
+            {else}
+                {eval var=$settings.badge_text}
+            {/if}
+        </span>
+    </div>
+{/strip}

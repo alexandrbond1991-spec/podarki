@@ -1,0 +1,11 @@
+{*подключение css js для настроек*}
+<link href="{$plugin->getPluginStaticUrl()}dist/css/app.css?v={$plugin->getHumanVersion()}" rel=stylesheet>
+
+<div style="position: relative"><div id="echo_plugin_backend"></div></div>
+
+<script>
+    var echo_plugin_settings = {$plugin->toJson('backend')|json_encode};
+    var echo_products_preload = {$plugin->toJson('products')|json_encode};
+</script>
+
+<script src="{$plugin->getPluginStaticUrl()}dist/js/app.js?v={$plugin->getHumanVersion()}"></script>

@@ -1,0 +1,24 @@
+{strip}
+    {* ширина изображения *}
+    {$settings.product_image_width = $settings.product_image_width|default:32|intval}
+
+    <div class="shop_addgifts shop_addgifts--{$current_theme} shop_addgifts--product  shop_addgifts--revert shop_addgifts--hook-{$settings.hook}">
+        {foreach $rules as $rule}
+            {if !empty($rule.revert)}
+                <div class="addgifts addgifts--gift">
+                    <div class="addgifts__gift js-addgifts__gift">
+                        {$img = $settings.gift_image|default:''}
+                        {if !empty($img)}
+                            <div class="addgifts__image">
+                                <img src="{$img}" class="addgifts__img" alt="">
+                            </div>
+                        {/if}
+                        <div>
+                            {eval var=$rule.revert}
+                        </div>
+                    </div>
+                </div>
+            {/if}
+        {/foreach}
+    </div>
+{/strip}

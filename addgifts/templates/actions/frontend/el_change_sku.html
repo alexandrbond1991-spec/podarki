@@ -1,0 +1,41 @@
+{strip}
+    {$_radio_name = rand(0,999999)}
+    {if ($gift.product.sku_count>1) && (!empty($gift.may_change_sku))}
+        <div class="addgifts__sku_name">
+            <div class="addgifts__skus js-addgifts__skus">
+
+                <a href="#" class="addgifts__link addgifts__skus_close js-addgifts__skus_close">×</a>
+                {foreach $gift.product.skus as $sku}
+                    <div class="addgifts__skus_item">
+                        <label>
+                            <input type="radio"
+                                   name="addgifts__select_sku{$_radio_name}"
+
+                                   class="js-addgifts__select_sku"
+
+                                   {if $gift.selected_sku == $sku.id} checked="checked" {/if}
+
+
+                                   data-vid="{$vid|default:0|escape}"
+                                   data-rule-id="{$rule.id}"
+
+                                   data-gift-index="{$gift_index}"
+
+                                   data-sku-name="{$sku.name|default:$sku.id|escape}"
+                                   value="{$sku.id}">
+
+                            &nbsp; {$sku.name|default:$sku.id}
+                        </label>
+                    </div>
+                {/foreach}
+            </div>
+
+            {if $gift.product.sku_type == 0}Артикул: {/if}
+            <span class="js-addgifts__sku_name"
+                  data-selected-sku-id="{$gift.selected_sku}">{$gift.selected_sku_name}</span>
+
+            <a href="#"
+               class="addgifts__link addgifts__link--change-sku js-addgifts__change_sku inline-link"><b><i>изменить</i></b></a>
+        </div>
+    {/if}
+{/strip}

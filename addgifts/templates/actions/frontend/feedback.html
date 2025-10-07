@@ -1,0 +1,28 @@
+{strip}
+   {$condition = $rule.condition}
+
+   {if !empty($need_products)}
+      Получите этот товар в подарок купив
+      {if $rule.gift_limit!='all' && $rule.limit_count>1} {$rule.limit_count} шт.{/if}:&nbsp;
+      {foreach $need_products as $good}
+         <a class="shop_addgifts__link" href="{$good->getProductUrl()}">{$good.name}</a>
+         {if !$good@last}
+            {if $rule.condition == 'and'} [`и`] {else}, {/if}
+         {/if}
+      {/foreach}
+   {/if}
+
+   {if !empty($need_categories)}
+
+      {if empty($need_products)}Получите этот товар в подарок купив {else}<br>{if $rule.condition == 'and'} и {else} или {/if}{/if}
+
+      {if $rule.gift_limit!='all' && $rule.limit_count>1} {$rule.limit_count} шт. любого товара{else}любой товар{/if} из {if (count($need_categories)==1)}категории{else}категорий{/if}:&nbsp;
+
+      {foreach $need_categories as $cate}
+         <a class="shop_addgifts__link" href="{$wa->shop->categoryUrl($cate)}">{$cate.name}</a>
+         {if !$cate@last}
+            {if $rule.condition == 'and'} [`и`] {else}, {/if}
+         {/if}
+      {/foreach}
+   {/if}
+{/strip}

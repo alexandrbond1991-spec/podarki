@@ -1,0 +1,91 @@
+{strip}
+
+{* пояснение к цене *}
+{if (!empty($common_settings.gift_price)) && (!empty($common_settings.price_comment))}
+{eval var=$common_settings.price_comment assign="price_comment"}
+{/if}
+
+{* ширина изображения *}
+{$settings.product_image_width = $settings.product_image_width|default:32|intval}
+<div class="shop_addgifts shop_addgifts--{$current_theme} shop_addgifts--product shop_addgifts--hook-{$settings.hook}{if !empty($price_comment)} js-addgifts__tooltip{/if}"
+     {if !empty($price_comment)} title="{$price_comment|escape}" data-toggle="tooltip" {/if}>
+<div class="addgifts__loader"></div>
+{foreach $rules as $rule}
+<div class="addgifts addgifts--product">
+
+    {if ($rule.gift_limit=='n') && (!empty($rule.stimul))&& (!empty($rule.limit_count))}
+    {$rule.text = $rule.stimul_product}
+    {/if}
+
+    {if !empty($rule.text)}
+    <div class="addgifts__header">{eval var=$rule.text}</div>
+    {/if}
+    {$_radio_name = rand(0,999999)}
+
+    {foreach $rule.gifts as $gift_index => $gift}
+    <div class="addgifts__gift js-addgifts__gift">
+
+        {if !empty($settings.product_image)}
+        {$img = $wa->shop->productImgUrl($gift.product, "`$settings.product_image_width`x0")}
+        {/if}
+
+        {$img = $img|default:$settings.gift_image|default:''}
+
+        
+        {if !empty($rule.multiple) && ($rule.multiple=='one') && (count($rule.gifts)>1)}
+        <div class="addgifts__form">
+            <label for="addgifts__gift--select_gift--r{$rule.id}--g{$gift_index}--p{$gift.product.id}" class="addgifts__label">
+                <input type="radio"
+                    name="addgifts__gift--select_gift--r{$rule.id}"
+                    id="addgifts__gift--select_gift--r{$rule.id}--g{$gift_index}--p{$gift.product.id}"
+                    class="js-addgifts__gift--select_gift  addgifts__gift--select_gift"
+
+                    {if $gift.selected== true} checked="checked" {/if}
+
+                    data-vid="{$vid|default:0|escape}"
+                    data-rule-id="{$rule.id}"
+
+                    data-gift-index="{$gift_index}"
+                    data-gift-product="{$gift.product.name|escape}"
+
+                    value="{$gift_index}">
+
+
+                <span class="addgifts__radiobutton"></span>
+            </label>
+        </div>
+        {/if}
+
+
+        {if !empty($img)}
+        <div class="addgifts__image">
+            {if !empty($rule.multiple) && ($rule.multiple=='one') && (count($rule.gifts)>1)}
+            <label for="addgifts__gift--select_gift--r{$rule.id}--g{$gift_index}--p{$gift.product.id}" class="addgifts__label">
+            {/if}
+
+                <img src="{$img}" class="addgifts__img" alt="{$gift.product.name|escape}">
+
+            {if !empty($rule.multiple) && ($rule.multiple=='one') && (count($rule.gifts)>1)}
+            </label>
+            {/if}
+        </div>
+        {/if}
+
+        <div>
+            {include file = $include__el_name}
+
+            {include file = $include__el_change_sku}
+        </div>
+
+    </div>
+    {/foreach}
+
+    {if !empty($rule.hint)}
+    <div class="addgifts__hint">{eval var=$rule.hint}</div>
+    {/if}
+
+
+</div>
+{/foreach}
+</div>
+{/strip}

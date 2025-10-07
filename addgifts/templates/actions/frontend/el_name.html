@@ -1,0 +1,20 @@
+<div class="addgifts__name">
+    <a class="addgifts__link" href="{$gift.frontend_url}">{$gift.product.name}</a>
+
+    {if !empty($price_comment)} <sup>*</sup>{/if}
+
+    {if $gift.count > 1}
+        <span> x {$gift.count}</span>
+    {/if}
+
+    {* не хватает на складе *}
+    {if isset($gift.gift_count)}
+        {if $gift.count != $gift.gift_count}
+            {if empty($gift.gift_count)}
+                (закончилось на складе)
+            {else}
+                (на складе только {$gift.gift_count})
+            {/if}
+        {/if}
+    {/if}
+</div>

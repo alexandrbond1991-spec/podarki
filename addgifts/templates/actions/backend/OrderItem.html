@@ -1,0 +1,87 @@
+{strip}
+
+    {* пояснение к цене *}
+    {if (!empty($common_settings.gift_price)) && (!empty($common_settings.price_comment))}
+        {eval var=$common_settings.price_comment assign="price_comment"}
+    {/if}
+
+    {* ширина изображения *}
+    {$settings.product_image_width = $settings.product_image_width|default:32|intval}
+
+    <div class="shop_addgifts shop_addgifts--{$current_theme} shop_addgifts--order-cart-item shop_addgifts--vid-{$vid} {if !empty($price_comment)} js-addgifts__tooltip{/if}"
+        {if !empty($price_comment)} title="{$price_comment|escape}"  data-toggle="tooltip"{/if}>
+        <div class="addgifts__loader"></div>
+
+        {foreach $rules as $rule}
+            <div class="addgifts js-addgifts__cart-item">
+
+                {if (!empty($rule.stimul)) && (!empty($rule.need_buy)) }
+                    {$need_buy = $rule.need_buy}
+                    {$rule.text = $rule.stimul}
+                {/if}
+
+                {if !empty($rule.text)}
+                    <div class="addgifts__header">{eval var=$rule.text}</div>
+                {/if}
+
+                {foreach $rule.gifts as $gift_index => $gift}
+                    <div class="addgifts__gift js-addgifts__gift">
+
+
+                        {if !empty($settings.product_image)}
+                            {$img = $wa->shop->productImgUrl($gift.product, "`$settings.product_image_width`x0")}
+                        {/if}
+
+                        {$img = $img|default:$settings.gift_image|default:''}
+
+                        {if !empty($img)}
+                            <div class="addgifts__image">
+                                <img src="{$img}" class="addgifts__img" alt="{$gift.product.name|escape}">
+                            </div>
+                        {/if}
+
+                        <div>
+                            <div class="addgifts__name">
+                                <a class="addgifts__link" href="?action=products#/product/{$gift.product.id}/edit/" target="_blank">{$gift.product.name}</a>
+
+                                {if !empty($price_comment)} <sup>*</sup>{/if}
+
+                                {if $gift.count > 1}
+                                    <span> x {$gift.count}</span>
+                                {/if}
+
+                                {* не хватает на складе *}
+                                {if isset($gift.gift_count)}
+                                    {if $gift.count != $gift.gift_count}
+                                        {if empty($gift.gift_count)}
+                                            (закончилось на складе)
+                                        {else}
+                                            (на складе только {$gift.gift_count})
+                                        {/if}
+                                    {/if}
+                                {/if}
+                            </div>
+
+                            {$_radio_name = rand(0,999999)}
+                            {if ($gift.product.sku_count>1) && (!empty($gift.may_change_sku))}
+                                <div class="addgifts__sku_name">
+
+                                    {if $gift.product.sku_type == 0}Артикул: {/if}
+                                    <span class="js-addgifts__sku_name"
+                                          data-selected-sku-id="{$gift.selected_sku}">{$gift.selected_sku_name}</span>
+
+                                </div>
+                            {/if}
+                        </div>
+
+                    </div>
+                {/foreach}
+
+                {if !empty($rule.hint)}
+                    <div class="addgifts__hint">{eval var=$rule.hint}</div>
+                {/if}
+
+            </div>
+        {/foreach}
+    </div>
+{/strip}

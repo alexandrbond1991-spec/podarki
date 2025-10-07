@@ -1,0 +1,10 @@
+{*подключение css js для настроек*}
+<link href="{$plugin->getPluginStaticUrl()}dist/css/app.css?v={$plugin->getHumanVersion()}" rel=stylesheet>
+
+<div style="position: relative"><div id="echo_plugin_settings"></div></div>
+
+<script>
+    var echo_plugin_settings = {$plugin->toJson('settings')|json_encode};
+</script>
+
+<script src="{$plugin->getPluginStaticUrl()}dist/js/app.js?v={$plugin->getHumanVersion()}"></script>

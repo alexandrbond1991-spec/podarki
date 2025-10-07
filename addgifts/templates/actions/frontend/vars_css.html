@@ -1,0 +1,43 @@
+{strip}
+    {if $_values.product_image_width != $_default.product_image_width}.addgifts__img{ width:{$_values.product_image_width|intval}px}{/if}
+    {if ($_values.cart_product_image_width != $_default.cart_product_image_width) || ($_values.product_image_width!=$_default.cart_product_image_width)}.addgifts__img--cart{ width:{$_values.cart_product_image_width|default:24|intval}px}{/if}
+
+    {if $_values.background_color != $_default.background_color}
+        .addgifts--product,.addgifts--gift,.addgifts--product .addgifts__gifts_select,.addgifts--product .addgifts__skus{ background-color:{$_values.background_color|default:'transparent'}}
+    {/if}
+
+    {if $_values.cart_background_color != $_default.cart_background_color}
+        .addgifts--cart-item,.addgifts--cart-item .addgifts__gifts_select,.addgifts--cart-item .addgifts__skus{ background-color:{$_values.cart_background_color|default:'transparent'};padding:10px}
+    {/if}
+
+    {if $_values.text_color != $_default.text_color}
+        .addgifts--product,.addgifts--gift,.addgifts--product .addgifts__gifts_select,.addgifts--product .addgifts__skus{ color:{$_values.text_color|default:'transparent'}}
+    {/if}
+
+    {if $_values.cart_text_color != $_default.cart_text_color}
+        .addgifts--cart-item,.addgifts--cart-item .addgifts__gifts_select,.addgifts--cart-item .addgifts__skus{ color:{$_values.cart_text_color|default:'transparent'}}
+    {/if}
+
+    {if $_values.link_color != $_default.link_color}.addgifts--gift a,.addgifts--product .addgifts__link,.addgifts--product .addgifts__link:visited{ color:{$_values.link_color|default:'transparent'} !important}{/if}
+    {if $_values.cart_link_color != $_default.cart_link_color}.addgifts--cart-item .addgifts__link,.addgifts--cart-item .addgifts__link:visited{ color:{$_values.cart_link_color|default:'transparent'} !important}{/if}
+
+    {if $_values.hover_color != $_default.hover_color}.addgifts--gift a:hover,.addgifts--gift a:focus,.addgifts--product .addgifts__link:hover,.addgifts--product .addgifts__link:focus{ color:{$_values.hover_color|default:'transparent'} !important}{/if}
+    {if $_values.cart_hover_color != $_default.cart_hover_color}.addgifts--cart-item .addgifts__link:hover,.addgifts--cart-item .addgifts__link:focus{ color:{$_values.cart_hover_color|default:'transparent'} !important}{/if}
+
+    {if $_values.hint_color != $_default.hint_color}.addgifts__hint{ color:{$_values.hint_color|default:'transparent'}}{/if}
+    {if $_values.cart_hint_color != $_default.cart_hint_color}.addgifts--cart-item .addgifts__hint{ color:{$_values.cart_hint_color|default:'transparent'}}{/if}
+
+    {if $_values.badge_background_color != $_default.badge_background_color}
+        .badge.gift{ background:{$_values.badge_background_color}}
+        .badge.gift.shop_addgifts__badge--vivashop span{ background:{$_values.badge_background_color}}
+        .badge.gift.shop_addgifts__badge--vivashop:after{ border-top-color: {$_values.badge_background_color}}
+        .s-badge-wrapper .badge.gift{ background:{$_values.badge_background_color} !important;}
+        .badge-wrapper .badge.gift{ background:{$_values.badge_background_color}}
+    {/if}
+
+    {if $_values.badge_color != $_default.badge_color}
+        .badge.gift{ color:{$_values.badge_color}}
+        .s-badge-wrapper .badge.gift{ color:{$_values.badge_color} !important;}
+    {/if}
+
+{/strip}
