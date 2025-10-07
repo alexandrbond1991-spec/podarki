@@ -2,7 +2,7 @@
 Плагин <a target="_blank" href="?action=products#/addgifts/">Подарки</a>:<br>
 {foreach $to_log as $record}
     {if ($record.vid=='after')}К товарам {else}К товару <b>{$record.product_name|escape}</b> {/if}
-    на основании правил: <b>{implode(', ', $record.rule_names)|escape}</b> добавлены подарки: <br>
+    на основании правил: <b>{implode(', ', $record.rule_names)|escape}</b> в комментарий заказа добавлена информация о подарках:<br>
     {foreach $record.gift_names as $gift_name}
         &nbsp;&nbsp;&nbsp;&nbsp;{$gift_name}<br>
     {/foreach}

@@ -986,7 +986,6 @@ trait shopAddgiftsTraitHelper
     public function orderCreate($params)
     {
 
-        $order_params = new shopOrderParamsModel;
         $settings = $this->getStorefrontSettings();
 
 
@@ -996,8 +995,6 @@ trait shopAddgiftsTraitHelper
 
         $order_model = new shopOrderModel();
         $order_data = $order_model->getOrder($params['order_id']);
-
-        $currency = wa('shop')->getConfig()->getCurrency(true);
 
         $model = new shopOrderItemsModel();
         $items = $model->getItems($params['order_id']);
@@ -1012,7 +1009,6 @@ trait shopAddgiftsTraitHelper
 
         $grouped_rules = $this->getCartGifts($items, $sum_in_cart);
 
-        $new_items = array();
         $to_log = array();
 
         foreach ($grouped_rules as $cart_id => $vid) {
@@ -1062,34 +1058,6 @@ trait shopAddgiftsTraitHelper
 
 
                         $gift_names[] = $log_name;
-
-                        $gift_ident = $gift['product']['id'] . '-' . $gift['selected_sku'];
-
-                        if (!isset($new_items[$gift_ident])) {
-
-                            //Получаем цену подарка из настроке
-                            $gift_price = $this->getSettings('gift_price');
-                            $gift_price = floatval(str_replace(',', '.', trim($gift_price)));
-
-                            //Учитываем Валюту
-                            if ($currency != $order_data['currency']) {
-                                $gift_price = shop_currency($gift_price, $currency, $order_data['currency'], false);
-                            }
-
-                            $new_items[$gift_ident] = array(
-                                'order_id' => $params['order_id'],
-                                'name' => $new_name,
-                                'product_id' => $gift['product']['id'],
-                                'sku_id' => $gift['selected_sku'],
-                                'sku_code' => isset($gift['product']['skus'][$gift['selected_sku']]['sku']) ? $gift['product']['skus'][$gift['selected_sku']]['sku'] : '',
-                                'type' => 'product',
-
-                                'price' => $gift_price,
-                                'quantity' => $gift['gift_count'],
-                            );
-                        } else {
-                            $new_items[$gift_ident]['quantity'] += $gift['gift_count'];
-                        }
                     }
                 }
             }
@@ -1123,45 +1091,40 @@ trait shopAddgiftsTraitHelper
             }
         }
 
-        //Если нет новых товаров - ничего не делать
-        if (empty($new_items)) {
+        //Если нет подарков - ничего не делать
+        if (empty($to_log)) {
             return;
         }
 
-        //Параметры заказа
-        $virtualstock_id = $order_params->getOne($params['order_id'], 'virtualstock_id');
-        $stok_id = $order_params->getOne($params['order_id'], 'stock_id');
+        $comment_lines = array();
+        foreach ($to_log as $record) {
+            if (empty($record['gift_names'])) {
+                continue;
+            }
 
-        //Склады
-        $virtualstock = null;
-        $stock = null;
+            $line = $record['product_name'];
 
-        //Если указаны склады
-        if ($virtualstock_id) {
-            $virtualstock = shopHelper::getStocks(array('v' . $virtualstock_id));
-            $virtualstock = array_shift($virtualstock);
+            if (!empty($record['rule_names'])) {
+                $line .= ' (' . implode(', ', $record['rule_names']) . ')';
+            }
+
+            $line .= ': ' . implode(', ', $record['gift_names']);
+
+            $comment_lines[] = $line;
         }
 
-        if ($stok_id) {
-            $stock = shopHelper::getStocks(array($stok_id));
-            $stock = array_shift($stock);
+        if (empty($comment_lines)) {
+            return;
         }
 
-        //Определение складов
-        shopAddgiftsWorkflowCreateAction::fillItemsStocks($new_items, $virtualstock, $stock);
+        $existing_comment = isset($order_data['comment']) ? trim($order_data['comment']) : '';
+        $comment_text = "Подарки:\n" . implode("\n", $comment_lines);
 
-        $model = new shopOrderItemsModel();
-
-        //Вычисляем добавочную стоимость, если стоимость подарка отлична от нуля
-        $additional_price = 0;
-        foreach ($new_items as $item) {
-            $additional_price += $item['price'] * $item['quantity'];
-            $model->insert($item);
+        if ($existing_comment !== '') {
+            $comment_text = $existing_comment . "\n\n" . $comment_text;
         }
 
-        if ($additional_price > 0) {
-            $order_model->updateById($params['order_id'], array('total' => $order_data['total'] + $additional_price));
-        }
+        $order_model->updateById($params['order_id'], array('comment' => $comment_text));
 
         //Пишем в лог заказа
         $view = wa()->getView();
